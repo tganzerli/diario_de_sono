@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   #System Features
+  path: ^1.9.1
   auto_injector: ^2.1.1
   result_dart: ^2.1.1
   result_command: ^2.1.0
