@@ -5,6 +5,7 @@ import 'storage/sqflite_impl.dart';
 import 'storage/storage_service.dart';
 
 export 'storage/storage_service.dart';
+export 'validation/validation_service.dart';
 
 class ServicesInjector {
   static void add(AutoInjector injector) {
