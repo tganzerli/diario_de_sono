@@ -28,7 +28,7 @@ class DatabaseHelper {
   ///
   /// The table has the following columns:
   /// - `id`               INTEGER PRIMARY KEY AUTOINCREMENT
-  /// - `date`             TEXT    NOT NULL      (YYYY-MM-DD)
+  /// - `date`             INTEGER               (MillisecondsSinceEpoch)
   /// - `bedtime`          TEXT                  (HH:MM)
   /// - `sleep_latency`    TEXT                  (HH:MM)
   /// - `sleep_duration`   TEXT                  (HH:MM)
@@ -38,7 +38,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE sleep_log(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        date TEXT NOT NULL,
+        date INTEGER NOT NULL,
         bedtime TEXT NOT NULL,
         sleep_latency TEXT NOT NULL,
         sleep_duration TEXT NOT NULL,
