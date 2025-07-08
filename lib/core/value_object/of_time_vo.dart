@@ -5,6 +5,7 @@ class OfTime extends ValueObject<String> {
   OfTime(super.value);
 
   String toMap() => value;
+  factory OfTime.fromMap(String map) => OfTime(map);
 
   @override
   Validation<OfTime> validate() {
