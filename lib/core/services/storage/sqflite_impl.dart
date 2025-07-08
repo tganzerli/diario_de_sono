@@ -6,14 +6,72 @@ class SqfliteStorageService implements StorageService {
 
   SqfliteStorageService(this._dbHelper);
 
-  Map<String, dynamic> _buildWhereClause(Map<String, dynamic> filter) {
-    if (filter.isEmpty) return {'where': '', 'whereArgs': []};
+  Map<String, dynamic> _buildWhereClause(List<StorageFilter> filters) {
+    if (filters.isEmpty) {
+      return {'where': '', 'whereArgs': <Object?>[]};
+    }
+
     final whereParts = <String>[];
     final whereArgs = <Object?>[];
-    filter.forEach((key, value) {
-      whereParts.add('$key = ?');
-      whereArgs.add(value);
-    });
+
+    for (var filter in filters) {
+      switch (filter.type) {
+        case WhereType.equals:
+          whereParts.add('${filter.column} = ?');
+          whereArgs.add(filter.values['value']);
+          break;
+        case WhereType.notEquals:
+          whereParts.add('${filter.column} <> ?');
+          whereArgs.add(filter.values['value']);
+          break;
+        case WhereType.greaterThan:
+          whereParts.add('${filter.column} > ?');
+          whereArgs.add(filter.values['value']);
+          break;
+        case WhereType.lessThan:
+          whereParts.add('${filter.column} < ?');
+          whereArgs.add(filter.values['value']);
+          break;
+        case WhereType.greaterThanOrEqual:
+          whereParts.add('${filter.column} >= ?');
+          whereArgs.add(filter.values['value']);
+          break;
+        case WhereType.lessThanOrEqual:
+          whereParts.add('${filter.column} <= ?');
+          whereArgs.add(filter.values['value']);
+          break;
+        case WhereType.between:
+          whereParts.add('${filter.column} BETWEEN ? AND ?');
+          whereArgs.add(filter.values['valueStart']);
+          whereArgs.add(filter.values['valueEnd']);
+          break;
+        case WhereType.inList:
+          final values = filter.values['values'] as List;
+          final placeholders = List.filled(values.length, '?').join(', ');
+          whereParts.add('${filter.column} IN ($placeholders)');
+          whereArgs.addAll(values);
+          break;
+        case WhereType.like:
+          whereParts.add('${filter.column} LIKE ?');
+          whereArgs.add(filter.values['value']);
+          break;
+        case WhereType.glob:
+          whereParts.add('${filter.column} GLOB ?');
+          whereArgs.add(filter.values['value']);
+          break;
+        case WhereType.contains:
+          whereParts.add('${filter.column} LIKE ?');
+          whereArgs.add('%${filter.values['value']}%');
+          break;
+        case WhereType.isNull:
+          whereParts.add('${filter.column} IS NULL');
+          break;
+        case WhereType.isNotNull:
+          whereParts.add('${filter.column} IS NOT NULL');
+          break;
+      }
+    }
+
     return {'where': whereParts.join(' AND '), 'whereArgs': whereArgs};
   }
 
@@ -26,9 +84,11 @@ class SqfliteStorageService implements StorageService {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> find(Map<String, dynamic> filter) async {
+  Future<List<Map<String, dynamic>>> find([
+    List<StorageFilter> filters = const [],
+  ]) async {
     final db = await _dbHelper.database;
-    final clause = _buildWhereClause(filter);
+    final clause = _buildWhereClause(filters);
     return await db.query(
       _dbHelper.tableName,
       where: clause['where'].isEmpty ? null : clause['where'],
@@ -37,18 +97,20 @@ class SqfliteStorageService implements StorageService {
   }
 
   @override
-  Future<Map<String, dynamic>?> findOne(Map<String, dynamic> filter) async {
-    final results = await find(filter);
+  Future<Map<String, dynamic>?> findOne([
+    List<StorageFilter> filters = const [],
+  ]) async {
+    final results = await find(filters);
     return results.isEmpty ? null : results.first;
   }
 
   @override
   Future<int> update(
-    Map<String, dynamic> filter,
-    Map<String, dynamic> data,
-  ) async {
+    Map<String, dynamic> data, [
+    List<StorageFilter> filters = const [],
+  ]) async {
     final db = await _dbHelper.database;
-    final clause = _buildWhereClause(filter);
+    final clause = _buildWhereClause(filters);
     return await db.update(
       _dbHelper.tableName,
       data,
@@ -58,9 +120,9 @@ class SqfliteStorageService implements StorageService {
   }
 
   @override
-  Future<int> delete(Map<String, dynamic> filter) async {
+  Future<int> delete([List<StorageFilter> filters = const []]) async {
     final db = await _dbHelper.database;
-    final clause = _buildWhereClause(filter);
+    final clause = _buildWhereClause(filters);
     return await db.delete(
       _dbHelper.tableName,
       where: clause['where'],
