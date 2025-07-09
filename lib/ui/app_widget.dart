@@ -3,6 +3,7 @@ import 'package:diario_de_sono/ui/pages/splash/splash_page.dart';
 import 'package:flutter/material.dart';
 
 import '../designer_system/theme/theme.dart';
+import 'pages/daily_sleep_log/daily_sleep_log_page.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -20,6 +21,11 @@ class AppWidget extends StatelessWidget {
         switch (settings.name) {
           case '/home':
             return _customPageRoute(const HomePage(), transitionType: 'fade');
+          case '/daily_sleep_log':
+            return _customPageRoute(
+              const DailySleepLogPage(),
+              transitionType: 'fade',
+            );
           default:
             return _customPageRoute(const SplashPage(), transitionType: 'fade');
         }
@@ -34,6 +40,8 @@ PageRouteBuilder _customPageRoute(
 }) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => page,
+    fullscreenDialog: true,
+    opaque: false,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       switch (transitionType) {
         case 'fade':

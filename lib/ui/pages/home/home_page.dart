@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../designer_system/designer_system.dart';
+import '../../app_routes.dart';
+import '../../app_widget.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,6 +11,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.light500,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(width: 40, height: 40, color: Colors.amber),
+          ),
+        ),
+      ),
       bottomNavigationBar: Container(
         height: 58,
         padding: EdgeInsets.symmetric(horizontal: context.spaces.xxl),
@@ -20,26 +29,22 @@ class HomePage extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButtonDS(
-              icon: Icons.tune_rounded,
-              color: context.colors.base50,
+            ButtonDS.small(
+              prefixIcon: Icons.tune_rounded,
               onPressed: () {
                 print('ajustes');
               },
             ),
-            IconButtonDS(
-              icon: Icons.share_outlined,
-              color: context.colors.base50,
+            ButtonDS.small(
+              prefixIcon: Icons.share_outlined,
               onPressed: () {
                 print('compartilhar');
               },
             ),
-            IconButtonDS(
-              icon: Icons.add,
-              color: context.colors.base50,
-              onPressed: () {
-                print('Adicionar sono');
-              },
+            ButtonDS.small(
+              prefixIcon: Icons.add,
+              onPressed: () =>
+                  navigatorKey.currentState?.pushNamed(AppRoutes.dailySleepLog),
             ),
           ],
         ),
