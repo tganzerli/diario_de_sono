@@ -16,7 +16,7 @@ class Evolution extends StatelessWidget {
       children: [
         SizedBox(
           child: ButtonDS.extraSmall(
-            style: ButtonDSStyle.textWhite,
+            style: ButtonDSStyle.textBlue,
             prefixIcon: Icons.arrow_back_ios,
             onPressed: backFn,
           ),
@@ -24,7 +24,7 @@ class Evolution extends StatelessWidget {
         Expanded(child: evolutionBar(evolution)),
         SizedBox(
           child: ButtonDS.small(
-            style: ButtonDSStyle.outlineWhite,
+            style: ButtonDSStyle.outlineBlue,
             label: 'Continuar',
             disabled: nextFn == null,
             onPressed: nextFn ?? () {},
