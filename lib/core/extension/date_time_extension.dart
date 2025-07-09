@@ -6,4 +6,8 @@ extension DateTimeExtension on DateTime {
   DateTime dayBefore(int days) {
     return startOfDay.subtract(Duration(days: days));
   }
+
+  String getFormattedDate() {
+    return '${day}_${month}_$year';
+  }
 }
