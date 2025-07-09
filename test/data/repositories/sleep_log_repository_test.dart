@@ -27,13 +27,13 @@ void main() {
   });
 
   group('add', () {
+    final dto = SleepLogDto()
+        .setBedtime(OfTime('22:00'))
+        .setSleepLatency(OfTime('00:15'))
+        .setSleepDuration(OfTime('07:30'))
+        .setAwakeningsCount(1);
+
     test('should add a valid sleep log and return Success', () async {
-      final dto = SleepLogDto(
-        bedtime: OfTime('22:00'),
-        sleepLatency: OfTime('00:15'),
-        sleepDuration: OfTime('07:30'),
-        awakeningsCount: 1,
-      );
       when(
         () => mockStorageService.create(any()),
       ).thenAnswer((_) async => {'id': 1});
@@ -42,12 +42,6 @@ void main() {
     });
 
     test('should return Failure when storage throws', () async {
-      final dto = SleepLogDto(
-        bedtime: OfTime('22:00'),
-        sleepLatency: OfTime('00:15'),
-        sleepDuration: OfTime('07:30'),
-        awakeningsCount: 1,
-      );
       when(
         () => mockStorageService.create(any()),
       ).thenThrow(Exception('error'));
