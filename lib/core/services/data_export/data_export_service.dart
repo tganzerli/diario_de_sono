@@ -13,21 +13,18 @@ class DataExportService {
     File? tempFile;
     try {
       tempFile = await _fileGenerationService.generateJsonFile(data);
-      final result = await _sharingService.shareFile(tempFile);
+      final result = await _sharingService.shareFile(
+        tempFile,
+        text: 'Relatório de sono',
+        subject: 'Relatório de sono',
+      );
       return result;
-    } catch (e, s) {
-      throw DataExportException('Erro ao exportar dados', s);
+    } catch (e) {
+      throw Exception('Erro ao exportar relatório');
     } finally {
       if (tempFile != null) {
         await tempFile.delete();
       }
     }
   }
-}
-
-class DataExportException implements Exception {
-  const DataExportException(this.message, [this.stackTracing]);
-
-  final String message;
-  final dynamic stackTracing;
 }

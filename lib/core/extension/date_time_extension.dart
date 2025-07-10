@@ -7,6 +7,10 @@ extension DateTimeExtension on DateTime {
     return startOfDay.subtract(Duration(days: days));
   }
 
+  String getDay() {
+    return toIso8601String().split('T').first;
+  }
+
   String getFormattedDate() {
     return '${day}_${month}_$year';
   }
