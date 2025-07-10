@@ -4,3 +4,4 @@ export 'button/button.dart';
 export 'button/styles.dart';
 export 'evolution/evolution.dart';
 export 'snack_bar/snack_bar.dart';
+export 'toggle_switch/toggle_switch.dart';

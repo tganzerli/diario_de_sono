@@ -15,7 +15,6 @@ class DataExportService {
       tempFile = await _fileGenerationService.generateJsonFile(data);
       final result = await _sharingService.shareFile(
         tempFile,
-        text: 'Relatório de sono',
         subject: 'Relatório de sono',
       );
       return result;

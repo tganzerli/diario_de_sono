@@ -5,7 +5,11 @@ import '../entities/sleep_log.dart';
 
 abstract interface class SleepLogRepository {
   AsyncResult<Unit> add(SleepLogDto sleepLog);
-  AsyncResult<List<SleepLog>> get([int? days]);
+  AsyncResult<List<SleepLog>> get([int? days, bool updateObserver = false]);
   AsyncResult<List<SleepLog>> getToSend();
   AsyncResult<Unit> updateToSend();
+
+  Stream<List<SleepLog>> logsObserver();
+
+  void dispose();
 }

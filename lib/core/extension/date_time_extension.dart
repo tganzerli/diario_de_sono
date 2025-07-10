@@ -14,4 +14,8 @@ extension DateTimeExtension on DateTime {
   String getFormattedDate() {
     return '${day}_${month}_$year';
   }
+
+  bool sameDay(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
+  }
 }

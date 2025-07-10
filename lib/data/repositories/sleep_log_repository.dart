@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:diario_de_sono/core/extension/date_time_extension.dart';
 import 'package:result_dart/result_dart.dart';
 
@@ -14,6 +16,14 @@ class SleepLogRepositoryImpl implements SleepLogRepository {
 
   SleepLogRepositoryImpl(this._storageService);
 
+  final _streamController = StreamController<List<SleepLog>>.broadcast();
+
+  @override
+  void dispose() => _streamController.close();
+
+  @override
+  Stream<List<SleepLog>> logsObserver() => _streamController.stream;
+
   @override
   AsyncResult<Unit> add(SleepLogDto sleepLog) {
     return sleepLog //
@@ -22,11 +32,15 @@ class SleepLogRepositoryImpl implements SleepLogRepository {
         .map(SleepLogDtoAdapter.toMap)
         .toAsyncResult()
         .flatMap(_addLog)
+        .onSuccess((_) => _updateObserver())
         .pure(unit);
   }
 
   @override
-  AsyncResult<List<SleepLog>> get([int? days]) async {
+  AsyncResult<List<SleepLog>> get([
+    int? days,
+    bool updateObserver = false,
+  ]) async {
     final filters = <StorageFilter>[];
     if (days != null) {
       final dateNow = DateTime.now();
@@ -40,7 +54,8 @@ class SleepLogRepositoryImpl implements SleepLogRepository {
     }
 
     return _getLogs(filters) //
-        .map((list) => list.map(SleepLogAdapter.fromMap).toList());
+        .map((list) => list.map(SleepLogAdapter.fromMap).toList())
+        .onSuccess((_) => updateObserver ? _updateObserver() : () {});
   }
 
   @override
@@ -54,7 +69,8 @@ class SleepLogRepositoryImpl implements SleepLogRepository {
   AsyncResult<Unit> updateToSend() {
     final filters = [StorageFilter.equals('is_sent', 0)];
     final data = {'is_sent': 1};
-    return _updateLogs(data, filters);
+    return _updateLogs(data, filters) //
+        .onSuccess((_) => _updateObserver());
   }
 
   AsyncResult<Map<String, dynamic>> _addLog(Map<String, dynamic> logMap) async {
@@ -87,5 +103,22 @@ class SleepLogRepositoryImpl implements SleepLogRepository {
     } catch (e) {
       return Failure(e is Exception ? e : Exception(e.toString()));
     }
+  }
+
+  AsyncResult<Unit> _updateObserver() async {
+    final days = 7;
+    final dateNow = DateTime.now();
+    final filters = <StorageFilter>[];
+    filters.add(
+      StorageFilter.between(
+        'date',
+        dateNow.dayBefore(days).millisecondsSinceEpoch,
+        dateNow.millisecondsSinceEpoch,
+      ),
+    );
+    return _getLogs(filters) //
+        .map((list) => list.map(SleepLogAdapter.fromMap).toList())
+        .onSuccess(_streamController.add)
+        .pure(unit);
   }
 }

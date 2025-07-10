@@ -28,6 +28,9 @@ dependencies:
   timezone: ^0.10.1
   flutter_native_timezone: ^2.0.0
 
+  #Components
+  fl_chart: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

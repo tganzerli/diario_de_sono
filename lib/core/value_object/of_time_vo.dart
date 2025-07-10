@@ -6,6 +6,13 @@ class OfTime extends ValueObject<String> {
 
   String toMap() => value;
   factory OfTime.fromMap(String map) => OfTime(map);
+  factory OfTime.fromMinutes(int minutes) {
+    final hour = minutes ~/ 60;
+    final minute = minutes % 60;
+    return OfTime('00:00').setHours(hour).setMinutes(minute);
+  }
+  factory OfTime.fromHHMM({int hour = 0, int minute = 0}) =>
+      OfTime('00:00').setHours(hour).setMinutes(minute);
 
   OfTime setHours(int hours) {
     final list = value.split(':');
@@ -21,6 +28,8 @@ class OfTime extends ValueObject<String> {
 
   int get hours => int.parse(value.split(':').first);
   int get minutes => int.parse(value.split(':').last);
+
+  int get timeInMinutes => (hours * 60) + minutes;
 
   @override
   Validation<OfTime> validate() {
