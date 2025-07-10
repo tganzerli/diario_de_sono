@@ -37,9 +37,8 @@ class HomePage extends StatelessWidget {
             ),
             ButtonDS.small(
               prefixIcon: Icons.share_outlined,
-              onPressed: () {
-                print('compartilhar');
-              },
+              onPressed: () =>
+                  navigatorKey.currentState?.pushNamed(AppRoutes.share),
             ),
             ButtonDS.small(
               prefixIcon: Icons.add,
