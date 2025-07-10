@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -31,6 +32,8 @@ class FlutterLocalNotifications implements NotificationService {
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
     tz.initializeTimeZones();
+    final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 
   @override
@@ -58,6 +61,17 @@ class FlutterLocalNotifications implements NotificationService {
   }
 
   @override
+  Future<int> updateNotification({
+    required int id,
+    required int hour,
+    required int minute,
+  }) async {
+    await _flutterLocalNotificationsPlugin.cancel(id);
+    final scheduledDate = _nextInstance(hour, minute);
+    return await _scheduleDaily(id: id, scheduledDate: scheduledDate);
+  }
+
+  @override
   Future<void> cancelNotification(int id) async {
     await _flutterLocalNotificationsPlugin.cancel(id);
   }
@@ -70,6 +84,12 @@ class FlutterLocalNotifications implements NotificationService {
     final String body = 'Você já realizou seu registro hoje? Não se esqueça!';
 
     final int scheduledId = id ?? Random().nextInt(1000);
+
+    final pendingNotifications = await _flutterLocalNotificationsPlugin
+        .pendingNotificationRequests();
+    if (pendingNotifications.any((element) => element.id == scheduledId)) {
+      return scheduledId;
+    }
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(
       scheduledId,

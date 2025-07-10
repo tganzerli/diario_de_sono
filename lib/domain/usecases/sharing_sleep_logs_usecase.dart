@@ -5,11 +5,11 @@ import '../../core/services/services.dart';
 import '../entities/sleep_log.dart';
 import '../repositories/sleep_log_repository.dart';
 
-class SharingSleepLogsUsecase {
+class SharingSleepLogs {
   final DataExportService _dataExportService;
   final SleepLogRepository _sleepLogRepository;
 
-  SharingSleepLogsUsecase(this._dataExportService, this._sleepLogRepository);
+  SharingSleepLogs(this._dataExportService, this._sleepLogRepository);
 
   AsyncResult<Unit> call() async {
     return _sleepLogRepository //

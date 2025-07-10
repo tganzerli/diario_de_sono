@@ -26,7 +26,8 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
   @override
   AsyncResult<Schedule> get() {
     return _get() //
-        .map(_adapter);
+        .map(_adapter)
+        .onSuccess((s) => s);
   }
 
   @override
@@ -34,7 +35,7 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
     try {
       CacheParams params = CacheParams(
         key: key,
-        value: '${schedule.id}:${schedule.hour}:${schedule.minute}}',
+        value: '${schedule.id}:${schedule.hour}:${schedule.minute}',
       );
       final result = await _cache.setData(params);
 
@@ -49,7 +50,6 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
   AsyncResult<String> _get() async {
     try {
       final result = await _cache.getData(key);
-
       return Success(result);
     } catch (e) {
       return Failure(e is Exception ? e : Exception(e.toString()));

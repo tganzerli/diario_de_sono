@@ -63,8 +63,8 @@ class _TimeBoxFieldState extends State<TimeBoxField> {
     }
     if (widget.initialValue != null &&
         widget.initialValue!.validate().isSuccess()) {
-      hoursController.text = widget.initialValue!.hours.toString();
-      minutesController.text = widget.initialValue!.minutes.toString();
+      hoursController.text = widget.initialValue!.value.split(':').first;
+      minutesController.text = widget.initialValue!.value.split(':').last;
     }
   }
 

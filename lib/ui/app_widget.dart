@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../designer_system/theme/theme.dart';
 import 'pages/daily_sleep_log/daily_sleep_log_page.dart';
+import 'pages/settings/settings_page.dart';
 import 'pages/share/share_page.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -18,7 +19,6 @@ class AppWidget extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: lightTheme(context),
       onGenerateRoute: (settings) {
-        final args = settings.arguments;
         switch (settings.name) {
           case '/home':
             return _customPageRoute(const HomePage(), transitionType: 'fade');
@@ -29,6 +29,11 @@ class AppWidget extends StatelessWidget {
             );
           case '/share':
             return _customPageRoute(const SharePage(), transitionType: 'fade');
+          case '/settings':
+            return _customPageRoute(
+              const SettingsPage(),
+              transitionType: 'slide',
+            );
           default:
             return _customPageRoute(const SplashPage(), transitionType: 'fade');
         }

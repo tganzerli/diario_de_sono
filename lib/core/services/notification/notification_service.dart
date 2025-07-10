@@ -33,6 +33,20 @@ abstract interface class NotificationService {
   /// Returns the ID of the newly scheduled notification for the next day.
   Future<int> skipThisDay({int? id, int hour = 9, int minute = 0});
 
+  /// Updates an existing scheduled notification.
+  ///
+  /// This method cancels the existing notification with the given [id]
+  /// and schedules a new one with the updated [hour] and [minute].
+  ///
+  /// - [id]: The unique identifier of the notification to update.
+  /// - [hour]: The new hour (0-23) for the notification.
+  /// - [minute]: The new minute (0-59) for the notification.
+  Future<int> updateNotification({
+    required int id,
+    required int hour,
+    required int minute,
+  });
+
   /// Cancels a scheduled notification.
   ///
   /// - [id]: The unique identifier of the notification to cancel.

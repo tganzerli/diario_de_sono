@@ -22,19 +22,9 @@ class _SharePageState extends State<SharePage> {
     }
 
     if (_viewmodel.shareCommand.value is FailureCommand) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(context.spaces.s),
-          ),
-          margin: EdgeInsets.all(context.spaces.margin),
-          backgroundColor: context.colors.dark,
-          content: Text(
-            _viewmodel.shareCommand.getCachedFailure()?.toMessage() ?? '',
-            style: context.text.labelLarge.setColor(context.colors.light50),
-          ),
-        ),
+      SnackBarDS(
+        context,
+        _viewmodel.shareCommand.getCachedFailure()?.toMessage() ?? '',
       );
       Navigator.pop(context);
     }

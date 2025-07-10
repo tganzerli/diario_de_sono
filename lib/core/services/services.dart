@@ -1,4 +1,5 @@
 import 'package:auto_injector/auto_injector.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'cache/cache_service.dart';
 import 'cache/shared_preferences.dart';
@@ -20,6 +21,7 @@ export 'validation/validation_service.dart';
 
 class ServicesInjector {
   static void add(AutoInjector injector) {
+    injector.addSingleton(FlutterLocalNotificationsPlugin.new);
     injector.addSingleton(DatabaseHelper.new);
     injector.addSingleton<Cache>(SharedPreferencesImpl.new);
     injector.addSingleton<NotificationService>(FlutterLocalNotifications.new);
